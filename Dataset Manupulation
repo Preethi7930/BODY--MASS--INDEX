@@ -1,0 +1,24 @@
+library("dplyr")
+
+content = read.csv("bmi.csv")
+content = na.omit(content)
+colnames(content)[4] <- "BMI"
+
+content$Age <- as.numeric(content$Age)
+class(content$Age)
+
+summary(content)
+
+content$BMI_status <- cut(content$BMI,
+                          breaks = c(-Inf, 18.5, 24.9, 29.9, 39.9, Inf),
+                          labels = c("Under weight", "Healthy weight", "Over weight", "Obese", "Severely Obese"),
+                          right = FALSE)
+summary(content)
+
+content$BMI <- round(content$BMI, 1)
+
+dataset = content %>% dplyr::select(Age, BMI, BMI_status)
+summary(dataset)
+
+
+write.csv(dataset, "BMI Dataset.csv", row.names = FALSE)
