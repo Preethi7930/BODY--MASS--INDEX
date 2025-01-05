@@ -1,0 +1,21 @@
+library(ggplot2)
+
+ggplot(dataset, aes(x = BMI)) +
+  geom_histogram(aes(y = ..count..), 
+                 binwidth = (max(dataset$BMI, na.rm = TRUE) - 0) / 12, 
+                 fill = "skyblue", color = "black", 
+                 boundary = 0) + 
+  
+  stat_function(fun = function(x) {
+    dnorm(x, mean = mean(dataset$BMI, na.rm = TRUE), 
+          sd = sd(dataset$BMI, na.rm = TRUE)) *
+      length(dataset$BMI) * (max(dataset$BMI) - 0) / 12},
+    color = "red", size = 1) + 
+  
+  scale_x_continuous(limits = c(0, max(dataset$BMI, na.rm = TRUE)), 
+                     breaks = seq(0, max(dataset$BMI, na.rm = TRUE), 
+                                  length.out = 13)) + 
+  labs(x = "BMI (kg/m²)", y = "Frequency", 
+       title = "Histogram of Body Mass Index with Normal Curve") + 
+  
+  theme_minimal()
